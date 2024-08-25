@@ -1,12 +1,18 @@
 package search
 
 import (
+	"regexp"
 	"search_engine/internal/models"
 	"strings"
 )
 
 func tokenize(content string) []string {
-	words := strings.Fields(strings.ToLower(content))
+	content = strings.ToLower(content)
+
+	re := regexp.MustCompile(`[^\w\s]+`)
+	cleanedContent := re.ReplaceAllString(content, "")
+
+	words := strings.Fields(cleanedContent)
 	return words
 }
 

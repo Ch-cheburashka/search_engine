@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"search_engine/internal/models"
 	"search_engine/internal/search"
 )
@@ -9,19 +10,32 @@ import (
 func main() {
 	index := search.NewIndex()
 
-	article1 := models.Article{ID: 1, Title: "Go Language", Content: "Discover tips, techniques, and discussions on Go programming.", Author: "John Doe", URL: "/articles/go-language"}
-	article2 := models.Article{ID: 2, Title: "Digital News", Content: "Digital news is evolving", Author: "Jane Doe", URL: "/articles/digital-news"}
+	title1, content1, err := search.ParseHTML("http://localhost:8080/test.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+	title2, content2, err := search.ParseHTML("http://localhost:8080/test_digital.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+	title3, content3, err := search.ParseHTML("http://localhost:8080/podcast.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+	article1 := models.Article{ID: 1, Title: title1, Content: content1, Author: "John Doe", URL: "http://localhost:8080/test.html"}
+	article2 := models.Article{ID: 2, Title: title2, Content: content2, Author: "Jane Doe", URL: "http://localhost:8080/test_digital.html"}
 
-	podcast1 := models.Podcast{ID: 1, Title: "Mental struggles", Description: "Exploring mental health through personal stories and expert insights", URL: "/podcasts/mental-struggles"}
+	podcast1 := models.Podcast{ID: 1, Title: title3, Description: content3, URL: "http://localhost:8080/podcast.html"}
+
+	index.AddPodcast(podcast1)
 
 	index.AddArticle(article1)
 	index.AddArticle(article2)
 
-	index.AddPodcast(podcast1)
-
-	results := index.Search("and")
+	results := index.Search("rapidly")
 
 	for _, result := range results {
 		fmt.Println(result)
 	}
+
 }
