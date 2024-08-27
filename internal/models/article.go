@@ -5,6 +5,5 @@ type Article struct {
 	Title   string
 	Content string
 	Author  string
-	Tags    []string
 	URL     string
 }

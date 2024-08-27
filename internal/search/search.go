@@ -10,7 +10,6 @@ func (index *Index) Search(query string) []models.SearchResult {
 	for _, word := range words {
 		articles := index.Articles[word]
 		podcasts := index.Podcasts[word]
-
 		for _, article := range articles {
 			searchResults[article.URL] = models.SearchResult{Title: article.Title, URL: article.URL}
 		}
