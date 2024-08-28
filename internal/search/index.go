@@ -41,13 +41,17 @@ func NewIndex() *Index {
 func (index *Index) AddArticle(article models.Article) {
 	words := tokenize(article.Content + article.Title)
 	for _, word := range words {
-		index.Articles[word] = append(index.Articles[word], article)
+		if !stopWords[word] {
+			index.Articles[word] = append(index.Articles[word], article)
+		}
 	}
 }
 
 func (index *Index) AddPodcast(podcast models.Podcast) {
 	words := tokenize(podcast.Description + podcast.Title)
 	for _, word := range words {
-		index.Podcasts[word] = append(index.Podcasts[word], podcast)
+		if !stopWords[word] {
+			index.Podcasts[word] = append(index.Podcasts[word], podcast)
+		}
 	}
 }
