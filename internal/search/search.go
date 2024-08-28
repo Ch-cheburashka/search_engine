@@ -1,11 +1,16 @@
 package search
 
 import (
+	"regexp"
 	"search_engine/internal/models"
+	"strings"
 )
 
 func (index *Index) Search(query string) []models.SearchResult {
-	words := tokenize(query)
+	strings.ToLower(query)
+	re := regexp.MustCompile(`[^\w\s]+`)
+	cleanedContent := re.ReplaceAllString(query, "")
+	words := strings.Fields(cleanedContent)
 	searchResults := make(map[string]models.SearchResult)
 	for _, word := range words {
 		articles := index.Articles[word]

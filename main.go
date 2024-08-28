@@ -17,6 +17,7 @@ func addArticleHandler(writer http.ResponseWriter, request *http.Request) {
 	title, content, err := search.ParseHTML(request.Body)
 	if err != nil {
 		http.Error(writer, "Invalid request payload", http.StatusBadRequest)
+		return
 	}
 	article := models.Article{ID: articlesNumber + 1, Title: title, Content: content, Author: "John Doe", URL: request.URL.Path + "/" + title}
 	index.AddArticle(article)
@@ -51,6 +52,7 @@ func searchHandler(writer http.ResponseWriter, request *http.Request) {
 	query := request.URL.Query().Get("query")
 	if query == "" {
 		writer.WriteHeader(http.StatusBadRequest)
+		return
 	}
 	results := index.Search(query)
 
@@ -60,6 +62,7 @@ func searchHandler(writer http.ResponseWriter, request *http.Request) {
 	jsonData, err := json.Marshal(results)
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 	_, err = writer.Write(jsonData)
 	if err != nil {

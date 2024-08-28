@@ -1,19 +1,32 @@
 package search
 
 import (
-	"regexp"
 	"search_engine/internal/models"
 	"strings"
+	"unicode"
 )
 
 func tokenize(content string) []string {
 	content = strings.ToLower(content)
 
-	re := regexp.MustCompile(`[^\w\s]+`)
-	cleanedContent := re.ReplaceAllString(content, "")
+	words := make(map[string]bool)
 
-	words := strings.Fields(cleanedContent)
-	return words
+	tokens := strings.FieldsFunc(content, func(c rune) bool {
+		return !unicode.IsLetter(c) && !unicode.IsNumber(c)
+	})
+
+	for _, word := range tokens {
+		if word != "" {
+			words[word] = true
+		}
+	}
+
+	uniqueWords := make([]string, 0, len(words))
+
+	for word := range words {
+		uniqueWords = append(uniqueWords, word)
+	}
+	return uniqueWords
 }
 
 type Index struct {
