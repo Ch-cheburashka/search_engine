@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"search_engine/internal/models"
@@ -21,7 +20,6 @@ func addArticleHandler(writer http.ResponseWriter, request *http.Request) {
 	}
 	article := models.Article{ID: articlesNumber + 1, Title: title, Content: content, Author: "John Doe", URL: request.URL.Path + "/" + title}
 	index.AddArticle(article)
-	fmt.Println(article.URL)
 	writer.WriteHeader(http.StatusOK)
 	_, err = writer.Write([]byte("Article added successfully"))
 	if err != nil {
@@ -38,7 +36,6 @@ func addPodcastHandler(writer http.ResponseWriter, request *http.Request) {
 	}
 	podcast := models.Podcast{ID: podcastsNumber + 1, Title: title, Description: description, URL: request.URL.Path + "/" + title}
 	index.AddPodcast(podcast)
-	fmt.Println(podcast.URL)
 	writer.WriteHeader(http.StatusOK)
 	_, err = writer.Write([]byte("Podcast added successfully"))
 	if err != nil {
