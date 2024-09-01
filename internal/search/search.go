@@ -30,34 +30,57 @@ func (index *Index) Search(query string) []models.SearchResult {
 	cleanedContent := re.ReplaceAllString(query, "")
 	words := strings.Fields(cleanedContent)
 
-	searchResults := make(map[string]models.SearchResult)
-	for _, word := range words {
-		if stopWords[word] {
-			continue
-		}
-		articles := index.Articles[word]
-		podcasts := index.Podcasts[word]
+	resultsChannel := make(chan map[string]models.SearchResult, 2)
 
-		sort.Slice(articles, func(i, j int) bool {
-			return articles[i].Article.ID < articles[j].Article.ID
-		})
+	go func() {
+		articleResults := make(map[string]models.SearchResult)
+		for _, word := range words {
+			if stopWords[word] {
+				continue
+			}
+			articles := index.Articles[word]
 
-		sort.Slice(articles, func(i, j int) bool {
-			return articles[i].Article.ID < articles[j].Article.ID
-		})
+			sort.Slice(articles, func(i, j int) bool {
+				return articles[i].Frequency > articles[j].Frequency
+			})
 
-		for _, article := range articles {
-			searchResults[article.Article.URL] = models.SearchResult{Title: article.Article.Title, URL: article.Article.URL}
+			for _, article := range articles {
+				articleResults[article.Article.URL] = models.SearchResult{Title: article.Article.Title, URL: article.Article.URL}
+			}
 		}
-		for _, podcast := range podcasts {
-			searchResults[podcast.Podcast.URL] = models.SearchResult{Title: podcast.Podcast.Title, URL: podcast.Podcast.URL}
+		resultsChannel <- articleResults
+	}()
+
+	go func() {
+		podcastResults := make(map[string]models.SearchResult)
+		for _, word := range words {
+			if stopWords[word] {
+				continue
+			}
+			podcasts := index.Podcasts[word]
+
+			sort.Slice(podcasts, func(i, j int) bool {
+				return podcasts[i].Frequency > podcasts[j].Frequency
+			})
+
+			for _, podcast := range podcasts {
+				podcastResults[podcast.Podcast.URL] = models.SearchResult{Title: podcast.Podcast.Title, URL: podcast.Podcast.URL}
+			}
 		}
-	}
+		resultsChannel <- podcastResults
+	}()
+
+	articleResults := <-resultsChannel
+	podcastResults := <-resultsChannel
 
 	results := make([]models.SearchResult, 0)
 
-	for _, result := range searchResults {
-		results = append(results, result)
+	for _, article := range articleResults {
+		results = append(results, article)
+	}
+
+	for _, podcast := range podcastResults {
+		results = append(results, podcast)
 	}
 
 	return results
