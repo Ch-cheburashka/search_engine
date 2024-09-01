@@ -6,10 +6,10 @@ import (
 	"unicode"
 )
 
-func tokenize(content string) []string {
+func tokenize(content string) map[string]int {
 	content = strings.ToLower(content)
 
-	words := make(map[string]bool)
+	words := make(map[string]int)
 
 	tokens := strings.FieldsFunc(content, func(c rune) bool {
 		return !unicode.IsLetter(c) && !unicode.IsNumber(c)
@@ -17,41 +17,46 @@ func tokenize(content string) []string {
 
 	for _, word := range tokens {
 		if word != "" {
-			words[word] = true
+			words[word]++
 		}
 	}
 
-	uniqueWords := make([]string, 0, len(words))
+	return words
+}
 
-	for word := range words {
-		uniqueWords = append(uniqueWords, word)
-	}
-	return uniqueWords
+type ArticlePair struct {
+	Frequency int
+	Article   models.Article
+}
+
+type PodcastPair struct {
+	Frequency int
+	Podcast   models.Podcast
 }
 
 type Index struct {
-	Articles map[string][]models.Article
-	Podcasts map[string][]models.Podcast
+	Articles map[string][]ArticlePair
+	Podcasts map[string][]PodcastPair
 }
 
 func NewIndex() *Index {
-	return &Index{Articles: make(map[string][]models.Article), Podcasts: make(map[string][]models.Podcast)}
+	return &Index{Articles: make(map[string][]ArticlePair), Podcasts: make(map[string][]PodcastPair)}
 }
 
 func (index *Index) AddArticle(article models.Article) {
 	words := tokenize(article.Content + article.Title)
-	for _, word := range words {
+	for word := range words {
 		if !stopWords[word] {
-			index.Articles[word] = append(index.Articles[word], article)
+			index.Articles[word] = append(index.Articles[word], ArticlePair{Frequency: words[word], Article: article})
 		}
 	}
 }
 
 func (index *Index) AddPodcast(podcast models.Podcast) {
 	words := tokenize(podcast.Description + podcast.Title)
-	for _, word := range words {
+	for word := range words {
 		if !stopWords[word] {
-			index.Podcasts[word] = append(index.Podcasts[word], podcast)
+			index.Podcasts[word] = append(index.Podcasts[word], PodcastPair{Frequency: words[word], Podcast: podcast})
 		}
 	}
 }
