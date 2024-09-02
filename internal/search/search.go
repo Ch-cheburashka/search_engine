@@ -26,7 +26,7 @@ var stopWords = map[string]bool{
 
 func (index *Index) Search(query string) []models.SearchResult {
 	query = strings.ToLower(query)
-	re := regexp.MustCompile(`[^\w\s]+`)
+	re := regexp.MustCompile(`[^\p{L}\p{N}\s]+`)
 	cleanedContent := re.ReplaceAllString(query, "")
 	words := strings.Fields(cleanedContent)
 
