@@ -37,23 +37,23 @@ The server will start on http://localhost:8080 ***by default***. You can specify
 ***1. Add an Article***
   -  Endpoint: `/add_article`
   - Method: `POST`
-  - Request: HTML content where the title is read from `<h1 class="inner-title">` and the content from `<div class="inner-content">`.
+  - Request: HTML document where the title is read from `<h1 class="inner-title">` and the content from `<div class="inner-content">`.
   - Response:
-    - 200 OK: Article added successfully.
+    - 200 OK: "Article added successfully".
 
 ***2. Add a Podcast***
  - Endpoint: `/add_podcast`
  - Method: `POST`
- - Request: HTML content where the title is read from `<h1 class="inner-title">` and the content from `<div class="inner-content">`.
+ - Request: HTML document where the title is read from `<h1 class="inner-title">` and the content from `<div class="inner-content">`.
  - Response:
-   - 200 OK: Article added successfully.
+   - 200 OK: "Podcast added successfully".
 
 ***3. Search***
  - Endpoint: `/search`
  - Method: `GET`
  - Query Parameter: query - the search query string. `http://localhost:8080/search?query=word`
  - Response:
-     - 200 OK: Returns a JSON array of search results. Each result is an object with the following format:
+     - 200 OK: Returns a JSON array of [search results](#search-result). Each result is an object with the following format:
        `[ { "title": "Example Title", "url": "http://example.com" }, ... ]`
 
 
