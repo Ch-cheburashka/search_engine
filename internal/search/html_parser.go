@@ -6,13 +6,7 @@ import (
 	"log"
 )
 
-func ParseHTML(reader io.ReadCloser) (Title string, Content string, err error) {
-	defer func(reader io.ReadCloser) {
-		err := reader.Close()
-		if err != nil {
-			log.Printf("Failed to close the document : %v", err)
-		}
-	}(reader)
+func ParseHTML(reader io.Reader) (Title string, Content string, err error) {
 	doc, err := goquery.NewDocumentFromReader(reader)
 	if err != nil {
 		log.Printf("Failed to read the document : %v", err)

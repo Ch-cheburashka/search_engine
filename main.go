@@ -39,7 +39,12 @@ func addArticleHandler(writer http.ResponseWriter, request *http.Request) {
 	articlesNumber++
 	artMux.Unlock()
 
-	index.AddArticle(article)
+	err = index.AddArticle(article)
+	if err != nil {
+		log.Printf("Failed to add article %s\n", article.Title)
+		http.Error(writer, "Failed to add article", http.StatusInternalServerError)
+		return
+	}
 	writer.WriteHeader(http.StatusOK)
 	_, err = writer.Write([]byte("Article added successfully"))
 	if err != nil {
@@ -72,7 +77,11 @@ func addPodcastHandler(writer http.ResponseWriter, request *http.Request) {
 	podcastsNumber++
 	podMux.Unlock()
 
-	index.AddPodcast(podcast)
+	err = index.AddPodcast(podcast)
+	if err != nil {
+		log.Printf("Failed to add podcast %s\n", podcast.Title)
+		http.Error(writer, "Failed to add podcast", http.StatusInternalServerError)
+	}
 	writer.WriteHeader(http.StatusOK)
 	_, err = writer.Write([]byte("Podcast added successfully"))
 	if err != nil {

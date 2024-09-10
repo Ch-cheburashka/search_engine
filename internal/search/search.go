@@ -13,7 +13,7 @@ var stopWords = map[string]bool{
 	"between": true, "into": true, "through": true, "during": true, "before": true, "after": true,
 	"above": true, "below": true, "to": true, "from": true, "up": true, "down": true, "under": true,
 	"over": true, "the": true, "a": true, "an": true, "he": true, "she": true, "it": true, "they": true,
-	"we": true, "you": true, "I": true, "me": true, "him": true, "her": true, "us": true, "them": true,
+	"we": true, "you": true, "i": true, "me": true, "him": true, "her": true, "us": true, "them": true,
 	"is": true, "are": true, "was": true, "were": true, "be": true, "been": true, "am": true, "have": true,
 	"has": true, "had": true, "do": true, "does": true, "did": true, "will": true, "would": true, "shall": true,
 	"should": true, "can": true, "could": true, "may": true, "might": true, "must": true, "this": true,
@@ -21,7 +21,7 @@ var stopWords = map[string]bool{
 	"its": true, "our": true, "their": true, "of": true, "if": true, "then": true, "there": true,
 	"here": true, "when": true, "where": true, "why": true, "how": true, "which": true, "no": true,
 	"not": true, "neither": true, "never": true, "none": true, "very": true, "too": true, "quite": true,
-	"rather": true, "almost": true, "just": true, "only": true,
+	"rather": true, "almost": true, "just": true, "only": true, "m": true, "s": true, "re": true,
 }
 
 func (index *Index) Search(query string) []models.SearchResult {
@@ -35,9 +35,6 @@ func (index *Index) Search(query string) []models.SearchResult {
 	go func() {
 		articleResults := make(map[string]models.SearchResult)
 		for _, word := range words {
-			if stopWords[word] {
-				continue
-			}
 			articles := index.Articles[word]
 
 			sort.Slice(articles, func(i, j int) bool {
