@@ -1,8 +1,8 @@
 package search
 
 import (
+	"github.com/Ch-cheburashka/search_engine/internal/models"
 	"regexp"
-	"search_engine/internal/models"
 	"sort"
 	"strings"
 )

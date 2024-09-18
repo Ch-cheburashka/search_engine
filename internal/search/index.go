@@ -2,7 +2,7 @@ package search
 
 import (
 	"errors"
-	"search_engine/internal/models"
+	"github.com/Ch-cheburashka/search_engine/internal/models"
 	"strings"
 	"sync"
 	"unicode"

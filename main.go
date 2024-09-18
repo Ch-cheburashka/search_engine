@@ -3,10 +3,10 @@ package main
 import (
 	"encoding/json"
 	"flag"
+	"github.com/Ch-cheburashka/search_engine/internal/models"
+	"github.com/Ch-cheburashka/search_engine/internal/search"
 	"log"
 	"net/http"
-	"search_engine/internal/models"
-	"search_engine/internal/search"
 	"strings"
 	"sync"
 )

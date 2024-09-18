@@ -1,6 +1,6 @@
-module search_engine
+module github.com/Ch-cheburashka/search_engine
 
-go 1.22
+go 1.22.0
 
 require (
 	github.com/PuerkitoBio/goquery v1.9.2 // indirect
